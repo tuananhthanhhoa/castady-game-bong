@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>game bóng</title>
+
+</head>
+<style>
+    canvas {
+        border: black 1px solid;
+    }
+</style>
+
+<body>
+    <canvas id="game" width="300" height="400"></canvas>
+    <script>
+        let canvas = document.getElementById('game');
+        let context = canvas.getContext('2d');
+        let x = 10, y = 10;
+        let dx = 2, dy = 2;
+        let r = 10;
+
+        let Taothanhchan = {
+            width: 50,
+            height: 10,
+            x: 0,
+            y: canvas.height - 10,
+            speed: 20
+        }
+
+        let ketThucGame = false;
+
+        document.addEventListener('keydown', function (event) {
+            if (event.keyCode == 37) {
+                Taothanhchan.x -= Taothanhchan.speed;
+            } else if (event.keyCode == 39) {
+                Taothanhchan.x += Taothanhchan.speed;
+
+            }
+        })
+
+        function bong() {
+            context.beginPath();
+            context.arc(x, y, 10, 0, 2 * Math.PI);
+            context.fillStyle = 'red';
+            context.fill();
+            context.closePath();
+        }
+
+        function thanhChan() {
+            context.beginPath();
+            context.rect(Taothanhchan.x, Taothanhchan.y, Taothanhchan.width, Taothanhchan.height);
+            context.fill();
+            context.closePath();
+
+        }
+
+        function dieuKienDiChuyen() {
+            if (x < r || x + r > canvas.width) {
+                dx = -dx;
+            }
+
+            if (y < r || y + r > canvas.height) {
+                dy = -dy;
+            }
+        }
+
+        function diChuyenBong() {
+            x += dx;
+            y += dy;
+        }
+
+
+        function vaCham() {
+            if (x + r >= Taothanhchan.x && x + r <= Taothanhchan.x + Taothanhchan.width && y + r >= canvas.height - Taothanhchan.height) {
+                dy = -dy;
+            }
+        }
+
+        function dieuKienDiChuyenThanhChan() {
+            if (Taothanhchan.x < 0) {
+                Taothanhchan.x = 0;
+            } else if (Taothanhchan.x > canvas.width - Taothanhchan.width) {
+                Taothanhchan.x = canvas.width - Taothanhchan.width;
+            }
+        }
+
+
+        function gameOver(){
+            if (y + r > canvas.height) {
+                    ketThucGame = true;
+            }
+        }
+        
+
+
+        function chuyenDong() {
+            if (!ketThucGame) {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                bong();
+                dieuKienDiChuyen();
+                dieuKienDiChuyenThanhChan();
+                thanhChan();
+                diChuyenBong();
+                vaCham();
+                gameOver();
+                requestAnimationFrame(chuyenDong);
+            } else {
+                alert('game Over');
+            }
+        }
+        chuyenDong();
+
+
+
+    </script>
+</body>
+
+</html>
